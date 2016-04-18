@@ -89,6 +89,10 @@ function __chain_prompt_arrow
     echo -n "($last_status)-"
   end
 
+  if test (jobs -l | wc -l) -gt 0
+    echo -n "%"
+  end
+
   echo -n "$chain_prompt_glyph "
 end
 
