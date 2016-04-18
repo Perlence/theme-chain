@@ -75,6 +75,12 @@ function __chain_prompt_git
   end
 end
 
+function __chain_prompt_virtualenv
+  if test "$VIRTUAL_ENV"
+    __chain_prompt_segment blue (basename $VIRTUAL_ENV)
+  end
+end
+
 function __chain_prompt_arrow
   if test $last_status = 0
     set_color green
@@ -89,6 +95,7 @@ end
 function fish_prompt
   set -g last_status $status
 
+  __chain_prompt_virtualenv
   __chain_prompt_root
   __chain_prompt_dir
   type -q git; and __chain_prompt_git
