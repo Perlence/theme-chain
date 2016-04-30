@@ -52,26 +52,26 @@ function __chain_prompt_dir
 end
 
 function __chain_prompt_git
-  if test (__chain_git_branch_name)
-    set -l git_branch (__chain_git_branch_name)
-    __chain_prompt_segment blue "$chain_git_branch_glyph $git_branch"
+  test (__chain_git_branch_name); or return
 
-    set -l glyphs ''
-    __chain_is_git_dirty; and set -l is_git_dirty 1; and set glyphs "$glyphs$chain_git_dirty_glyph"
-    __chain_is_git_staged; and set -l is_git_staged 1; and set glyphs "$glyphs$chain_git_staged_glyph"
-    __chain_is_git_stashed; and set -l is_git_stashed 1; and set glyphs "$glyphs$chain_git_stashed_glyph"
-    __chain_is_git_new; and set -l is_git_new 1; and set glyphs "$glyphs$chain_git_new_glyph"
+  set -l git_branch (__chain_git_branch_name)
+  __chain_prompt_segment blue "$chain_git_branch_glyph $git_branch"
 
-    set -l color green
-    if test "$is_git_dirty" -o "$is_git_staged"
-      set color red
-    else if test "$is_git_stashed"
-      set color yellow
-    end
+  set -l glyphs ''
+  __chain_is_git_dirty; and set -l is_git_dirty 1; and set glyphs "$glyphs$chain_git_dirty_glyph"
+  __chain_is_git_staged; and set -l is_git_staged 1; and set glyphs "$glyphs$chain_git_staged_glyph"
+  __chain_is_git_stashed; and set -l is_git_stashed 1; and set glyphs "$glyphs$chain_git_stashed_glyph"
+  __chain_is_git_new; and set -l is_git_new 1; and set glyphs "$glyphs$chain_git_new_glyph"
 
-    if test -n "$glyphs"
-      __chain_prompt_segment $color $glyphs
-    end
+  set -l color green
+  if test "$is_git_dirty" -o "$is_git_staged"
+    set color red
+  else if test "$is_git_stashed"
+    set color yellow
+  end
+
+  if test -n "$glyphs"
+    __chain_prompt_segment $color $glyphs
   end
 end
 
