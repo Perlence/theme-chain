@@ -81,6 +81,10 @@ function __chain_prompt_virtualenv
   end
 end
 
+function __chain_prompt_time
+  __chain_prompt_segment normal (date +%H:%M:%S)
+end
+
 function __chain_prompt_arrow
   if test $last_status = 0
     set_color green
@@ -99,9 +103,10 @@ end
 function fish_prompt
   set -g last_status $status
 
-  __chain_prompt_virtualenv
+  __chain_prompt_time
   __chain_prompt_root
   __chain_prompt_dir
+  __chain_prompt_virtualenv
   type -q git; and __chain_prompt_git
   __chain_prompt_arrow
 
