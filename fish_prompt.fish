@@ -13,6 +13,8 @@ set -q chain_git_new_glyph
   or set -g chain_git_new_glyph "…"
 set -q chain_su_glyph
   or set -g chain_su_glyph "⚡"
+set -q chain_duration_glyph
+  or set -g chain_duration_glyph "⌛"
 
 function __chain_prompt_segment
   set_color $argv[1]
@@ -91,6 +93,11 @@ function __chain_prompt_arrow
   else
     set_color red
     echo -n "($last_status)-"
+  end
+
+  if test "$CMD_DURATION" -gt 250
+    set -l duration (echo $CMD_DURATION | humanize_duration)
+    echo -n "($chain_duration_glyph $duration)-"
   end
 
   if test (jobs -l | wc -l) -gt 0
