@@ -20,26 +20,6 @@ function __chain_prompt_segment
   set_color normal
 end
 
-function __chain_git_branch_name
-  echo (command git symbolic-ref HEAD ^/dev/null | sed -e 's|^refs/heads/||')
-end
-
-function __chain_is_git_dirty
-  not command git diff --no-ext-diff --quiet --exit-code
-end
-
-function __chain_is_git_staged
-  not command git diff --cached --no-ext-diff --quiet --exit-code
-end
-
-function __chain_is_git_stashed
-  command git rev-parse --verify --quiet refs/stash >/dev/null
-end
-
-function __chain_is_git_new
-  test (echo (command git ls-files --other --exclude-standard --directory --no-empty-directory))
-end
-
 function __chain_prompt_root
   set -l uid (id -u $USER)
   if test $uid -eq 0
@@ -52,16 +32,16 @@ function __chain_prompt_dir
 end
 
 function __chain_prompt_git
-  test (__chain_git_branch_name); or return
+  test (git_branch_name); or return
 
-  set -l git_branch (__chain_git_branch_name)
+  set -l git_branch (git_branch_name)
   __chain_prompt_segment blue "$chain_git_branch_glyph $git_branch"
 
   set -l glyphs ''
-  __chain_is_git_dirty; and set -l is_git_dirty 1; and set glyphs "$glyphs$chain_git_dirty_glyph"
-  __chain_is_git_staged; and set -l is_git_staged 1; and set glyphs "$glyphs$chain_git_staged_glyph"
-  __chain_is_git_stashed; and set -l is_git_stashed 1; and set glyphs "$glyphs$chain_git_stashed_glyph"
-  __chain_is_git_new; and set -l is_git_new 1; and set glyphs "$glyphs$chain_git_new_glyph"
+  git_is_dirty; and set -l is_git_dirty 1; and set glyphs "$glyphs$chain_git_dirty_glyph"
+  git_is_staged; and set -l is_git_staged 1; and set glyphs "$glyphs$chain_git_staged_glyph"
+  git_is_stashed; and set -l is_git_stashed 1; and set glyphs "$glyphs$chain_git_stashed_glyph"
+  git_untracked_files >/dev/null; and set -l is_git_new 1; and set glyphs "$glyphs$chain_git_new_glyph"
 
   set -l color green
   if test "$is_git_dirty" -o "$is_git_staged"
