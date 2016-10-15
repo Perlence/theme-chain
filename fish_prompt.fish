@@ -3,6 +3,8 @@ set -q chain_prompt_glyph
   or set -g chain_prompt_glyph ">"
 set -q chain_git_branch_glyph
   or set -g chain_git_branch_glyph "⎇"
+set -q chain_git_detached_glyph
+  or set -g chain_git_detached_glyph "➤"
 set -q chain_git_dirty_glyph
   or set -g chain_git_dirty_glyph "±"
 set -q chain_git_staged_glyph
@@ -35,7 +37,11 @@ function __chain_prompt_git
   test (git_branch_name); or return
 
   set -l git_branch (git_branch_name)
-  __chain_prompt_segment blue "$chain_git_branch_glyph $git_branch"
+  if git_is_detached_head
+    __chain_prompt_segment bryellow "$chain_git_detached_glyph $git_branch"
+  else
+    __chain_prompt_segment blue "$chain_git_branch_glyph $git_branch"
+  end
 
   set -l glyphs ''
   git_is_dirty; and set -l is_git_dirty 1; and set glyphs "$glyphs$chain_git_dirty_glyph"
